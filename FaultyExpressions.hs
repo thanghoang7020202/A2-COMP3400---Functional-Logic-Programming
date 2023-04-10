@@ -121,4 +121,4 @@ Implement the following function.
 --}
 
 evaluate :: Expr -> Maybe Int
-evaluate = undefined
+evaluate exp = undefined

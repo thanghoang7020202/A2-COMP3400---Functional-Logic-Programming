@@ -4,9 +4,19 @@
 --compute lcVariance (x:xs). Note, fromIntegral.length is compatible with Float.
 
 lcVariance :: [Float] -> Float
-lcVariance [] = 0
-lcVariance (x:xs) = (1/fromIntegral(length (x:xs))) * (x^2 + fromIntegral(length (xs)) * avg (x:xs) ^2 )
+lcVariance [] = undefined
+lcVariance [x] = 0
+lcVariance (x:xs) = (1/nplus1) * (x^2 + n * (lcVariance xs + avg xs ^2)) - avg (x:xs) ^2
     where
         avg :: [Float] -> Float
-        avg [] = 0
-        avg (x:xs) = (x + fromIntegral(length (xs)) * avg (xs)) / fromIntegral(length (x:xs))
+        avg ys = sum ys / fromIntegral(length ys)
+        nplus1 :: Float
+        nplus1 = fromIntegral(length (x:xs))
+        n :: Float
+        n = fromIntegral(length xs)
+
+
+trVariance :: Float -> Float -> Float -> [Float] -> Float
+trVariance _ _ _ [] = undefined
+trVariance _ _ _ [x] = 0
+trVariance nplus1 n avg (x:xs) = undefined
