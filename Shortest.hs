@@ -1,5 +1,4 @@
 module Shortest (shortest) where
-import Distribution.Simple.Utils (xargs)
 
 -- Do not modify anything above this line.
 --

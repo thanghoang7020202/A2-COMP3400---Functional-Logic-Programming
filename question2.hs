@@ -15,8 +15,16 @@ lcVariance (x:xs) = (1/nplus1) * (x^2 + n * (lcVariance xs + avg xs ^2)) - avg (
         n :: Float
         n = fromIntegral(length xs)
 
+-- why this result is population variance??? not sample variance?
+--how to find the invariance of the variance?
 
+-- initial case: n = 1, avgfull = 0, variance = 0
 trVariance :: Float -> Float -> Float -> [Float] -> Float
 trVariance _ _ _ [] = undefined
-trVariance _ _ _ [x] = 0
-trVariance nplus1 n avg (x:xs) = undefined
+trVariance _ _ variance [x] = variance 
+trVariance n avgfull variance (x:xs) = trVariance (n+1) avgnew ((1/(n+1)) * (x^2 + n * (variance + avgfull ^2)) - avgnew ^2) xs
+    where avgnew = (x+n*avgfull)/(n+1)
+
+variance :: [Float] -> Float
+variance = trVariance 1 0 0
+

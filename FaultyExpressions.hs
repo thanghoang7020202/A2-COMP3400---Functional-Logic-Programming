@@ -72,7 +72,7 @@ it is never evaluated and hence the expression is valid.
 -- (if False then 1 else 9 // 4) + 5
 valid2 :: Expr
 valid2 = Add (If (Logical False)
-                 (Num 1)
+                 (Num 3)
                  (Div (Num 9) (Num 4))
              )
              (Num 5)
@@ -82,6 +82,10 @@ The result is 9 // 4 + 5 = 2 + 5 = 7
 
 Here are some examples of invalid expressions:
 --}
+valid3 = If (Logical False)
+            (Num 3)
+            (Div (Num 9) (Num 4))
+             
 
 -- if 5 < 2 + 3 then 42 else 1 // 0
 invalid1 :: Expr
@@ -121,4 +125,33 @@ Implement the following function.
 --}
 
 evaluate :: Expr -> Maybe Int
-evaluate exp = undefined
+evaluate (Num i) = Just i
+evaluate (Logical b) = Nothing
+
+evaluate (Add a b) = sumjust (evaluate a) (evaluate b)
+   where sumjust :: Maybe Int -> Maybe Int -> Maybe Int
+         sumjust (Just a) (Just b) = Just (a + b)
+         sumjust _ _ = Nothing
+
+evaluate (Div a b) = divjust (evaluate a) (evaluate b)
+   where divjust :: Maybe Int -> Maybe Int -> Maybe Int
+         divjust (Just a) (Just 0) = Nothing
+         divjust (Just a) (Just b) =  Just (a `div` b)
+         divjust _ _ = Nothing
+
+evaluate (Less a b) = Nothing
+
+evaluate (If (Logical True) a b) = evaluate a
+evaluate (If (Logical False) a b) = evaluate b
+evaluate (If (Less x y) a b)
+   | lessjust (evaluate x) (evaluate y) = evaluate a
+   | not $ lessjust (evaluate x) (evaluate y) = evaluate b
+   | otherwise = Nothing
+   where
+      lessjust :: Maybe Int -> Maybe Int -> Bool 
+      lessjust (Just a) (Just b) = a < b
+      lessjust _ _ = undefined
+evaluate (If _ a b) = Nothing
+   
+
+

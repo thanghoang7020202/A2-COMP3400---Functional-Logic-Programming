@@ -32,4 +32,8 @@ Note that this solution is not unique. Any valid solution will be accepted.
 --}
 
 tile :: Int -> [[Int]]
-tile = undefined
+tile <0 = []
+tile 0 = [[0]]
+tile n = undefined
+
+
