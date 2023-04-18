@@ -15,7 +15,7 @@ import Prelude hiding (lookup)
 -- This question is worth 20 POINTS
 
 {--
-In this task, you will have to implement a map (dictionary, key-value storage) which will hold keys of type k and values of type v.
+In this task, you will have to implement a map (dictionary, key-(getFunMap map key) storage) which will hold keys of type k and (getFunMap map key)s of type v.
 
 The data type for this map is
 --}
@@ -23,15 +23,15 @@ The data type for this map is
 newtype FunMap k v
   = FunMap
     { getFunMap :: k -> Maybe v }
-
+-- define getter to that type
 --
 -- Part 1.
 --
 -- Your task is to implement the usual operations for maps:
--- A function which returns an empty map (a map with no keys and values):
+-- A function which returns an empty map (a map with no keys and (getFunMap map key)s):
 
 empty :: FunMap k v
-empty = FunMap (\k -> Nothing)
+empty = FunMap (\_ -> Nothing)
 
 -- A function to search elements in the map by key.
 -- If there is an element associated with the given key, the function should return Just element.
@@ -45,29 +45,33 @@ lookup key map = getFunMap map key
 -- If there already IS an element associated with that key, overwrite it.
 
 insert :: Eq k => k -> v -> FunMap k v -> FunMap k v
-insert k v map = FunMap (\key -> if key == k then Just v else lookup k map)
+insert k v map = FunMap(\key -> if key == k then Just v else lookup k map)
 
 -- A function to remove the element and the associated key from the map.
 -- If there was no element associated with the key, return the map unchanged.
 
 delete :: Eq k => k -> FunMap k v -> FunMap k v
-delete = undefined 
+delete k map = FunMap (\key -> if key == k then Nothing else lookup k map) 
 
--- A function to construct a map from a list of key-value pairs.
--- If there are several values associated with the same key in the list,
+-- A function to construct a map from a list of key-(getFunMap map key) pairs.
+-- If there are several (getFunMap map key)s associated with the same key in the list,
 -- the last one that appears in the list should be stored in the map.
 
 fromList :: Eq k => [(k,v)] -> FunMap k v
-fromList xs = undefined
+fromList [] = empty
+fromList (x:xs) = FunMap(\key -> if key == fst x then Just (snd x) else lookup key (fromList xs))
 
 -- Part 2.
 --
 -- Implement the Functor instance for this map:
 
 instance Functor (FunMap k) where
-    fmap = undefined
+  --fmap :: (a->b) -> FunMap k a -> FunMap k b
+    fmap f map = FunMap(\key -> fmap f (getFunMap map key)) 
 
--- fmap should only change elements (values) in the map applying the provided function to them.
+     
+
+-- fmap should only change elements ((getFunMap map key)s) in the map applying the provided function to them.
 -- It should not change keys nor the structure of the map.
 
 -- Using the Functor instance you just defined, implement the following functions:
@@ -77,7 +81,7 @@ instance Functor (FunMap k) where
 -- Implement function
 
 changeCurrency :: (Int -> Int) -> FunMap String Int -> FunMap String Int
-changeCurrency = undefined
+changeCurrency = fmap
 
 -- Students’ marks are stored in the grading system in FunMap String Int where
 -- String represents student’s name and Int represents their mark in the range [0, 100].
@@ -92,5 +96,16 @@ changeCurrency = undefined
 -- 0 <= mark <= 16 -> ‘F’
 
 convertMarks :: FunMap String Int -> FunMap String Char
-convertMarks = undefined
+convertMarks map = FunMap(\key -> if within (getFunMap map key) 84 100 then Just 'A' else 
+    if within (getFunMap map key) 67 83 then Just 'B' else
+    if within (getFunMap map key) 50 66 then Just 'C' else
+    if within (getFunMap map key) 34 49 then Just 'D' else
+    if within (getFunMap map key) 17 33 then Just 'E' else Just 'F')
+      where within val a b = lne a val && gne b val
+            gne :: Int -> Maybe Int -> Bool 
+            gne a (Just b) = a >= b
+            gne _ Nothing = False
+            lne :: Int -> Maybe Int -> Bool 
+            lne a (Just b) = a <= b
+            lne _ Nothing = False
 

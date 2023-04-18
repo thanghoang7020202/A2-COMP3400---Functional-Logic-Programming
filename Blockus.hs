@@ -31,9 +31,14 @@ Note that this solution is not unique. Any valid solution will be accepted.
 
 --}
 
+--number of blocks to fill = (2^k * 2^k -1) /3
 tile :: Int -> [[Int]]
-tile <0 = []
 tile 0 = [[0]]
-tile n = undefined
+tile 1 = [[0,1],[1,1]]
+tile k 
+        | k < 0 = []
+        | otherwise = zipWith (++)  (tile (k-1)) (reverse $ [[if i == 0 then k else i*4| i <- x ] | x <- tile (k-1)]) ++
+        zipWith (++) (map reverse $ [[if i == 0 then k else i*5| i <- x ]|x <- tile (k-1)]) [ [if i == 0 then k else i*3| i <- x ]|x <- tile (k-1)]
 
+-- how to filling it with numbers?
 
