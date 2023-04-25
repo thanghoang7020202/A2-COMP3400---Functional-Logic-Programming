@@ -37,3 +37,4 @@ fmap'' f Nothing = Nothing
 --instance Functor []  where
 --    fmap f [] = []:[1]
 --    fmap f (x:xs) = f x : [1] : fmap f xs
+

@@ -30,12 +30,7 @@ shortest [[]] = Nothing
 shortest [] = Nothing
 shortest [x]= Just x
 shortest (x:xs)
-    | take 100000 x /= x = shortest xs
-    | take 100000 (head xs) /= head xs = shortest (x:tail xs)
+    | take 1000000 x /= x = shortest xs
+    | take 1000000 (head xs) /= head xs = shortest (x:tail xs)
     | length x > length (head xs) = shortest xs
     | otherwise = shortest (x:tail xs)
-
--- how about sevaral shortest lists of the same lenght? return the first one?
--- how about infinite input lists? 
--- how to know that value is the smallest if it located in the infinite list? only eception is [] in that input list that can break the loop
--- minimum length of the list is 1, so if the list is empty, return Nothing?

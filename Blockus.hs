@@ -37,8 +37,8 @@ tile 0 = [[0]]
 tile 1 = [[0,1],[1,1]]
 tile k 
         | k < 0 = []
-        | otherwise = zipWith (++)  (tile (k-1)) (reverse $ [[if i == 0 then k else i*4| i <- x ] | x <- tile (k-1)]) ++
-        zipWith (++) (map reverse $ [[if i == 0 then k else i*5| i <- x ]|x <- tile (k-1)]) [ [if i == 0 then k else i*3| i <- x ]|x <- tile (k-1)]
+        | otherwise = zipWith (++)  (tile (k-1)) (reverse $ [[if i == 0 then k else i*k+3| i <- x ] | x <- tile (k-1)]) ++
+        zipWith (++) (map reverse $ [[if i == 0 then k else i*k+4| i <- x ]|x <- tile (k-1)]) [ [if i == 0 then k else i*k+2| i <- x ]|x <- tile (k-1)]
 
 -- how to filling it with numbers?
 
