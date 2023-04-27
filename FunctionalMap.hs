@@ -96,7 +96,18 @@ changeCurrency = fmap
 -- 0 <= mark <= 16 -> ‘F’
 
 convertMarks :: FunMap String Int -> FunMap String Char
-convertMarks map = FunMap(\key -> if within (getFunMap map key) 84 100 then Just 'A' else 
+convertMarks = fmap converter
+  where 
+    converter mark
+      | mark >= 84 && mark <= 100 = 'A'
+      | mark >= 67 && mark <= 83 = 'B'
+      | mark >= 50 && mark <= 66 = 'C'
+      | mark >= 34 && mark <= 49 = 'D'
+      | mark >= 17 && mark <= 33 = 'E'
+      | otherwise = 'F'
+
+{-convertMarks :: FunMap String Int -> FunMap String Char
+convertMarks = FunMap(\key -> if within (getFunMap map key) 84 100 then Just 'A' else 
     if within (getFunMap map key) 67 83 then Just 'B' else
     if within (getFunMap map key) 50 66 then Just 'C' else
     if within (getFunMap map key) 34 49 then Just 'D' else
@@ -107,5 +118,4 @@ convertMarks map = FunMap(\key -> if within (getFunMap map key) 84 100 then Just
             gne _ Nothing = False
             lne :: Int -> Maybe Int -> Bool 
             lne a (Just b) = a <= b
-            lne _ Nothing = False
-
+            lne _ Nothing = False-}
