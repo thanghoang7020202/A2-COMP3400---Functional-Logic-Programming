@@ -1,4 +1,5 @@
 module Shortest (shortest) where
+import Language.Haskell.TH.Syntax (counter)
 
 -- Do not modify anything above this line.
 --
@@ -26,11 +27,24 @@ For example,
 --}
 
 shortest :: Eq a => [[a]] -> Maybe [a]
-shortest [[]] = Nothing
 shortest [] = Nothing
-shortest [x]= Just x
-shortest (x:xs)
-    | take 1000000 x /= x = shortest xs
-    | take 1000000 (head xs) /= head xs = shortest (x:tail xs)
-    | length x > length (head xs) = shortest xs
-    | otherwise = shortest (x:tail xs)
+shortest (x:xs) 
+    | null x = Just []
+    | otherwise = shortest' 0 (x:xs) (x:xs)
+    where
+        cutter:: Int -> [[a]] -> [[a]] -> Maybe [a]
+        cutter k originalList [] = Nothing
+        cutter k originalList (x:xs) = shortest' k originalList [drop k y | y <- originalList ] 
+        shortest':: Int -> [[a]] -> [[a]] -> Maybe [a]
+        shortest' k originalList [] = Nothing
+        shortest' k originalList (x:xs) 
+            | ifNotInfinity 0 (x:xs) == -1 = cutter (k+1) originalList (x:xs)
+            | otherwise = Just (originalList !! ifNotInfinity 0 (x:xs))
+        ifNotInfinity:: Int -> [[a]] -> Int
+        ifNotInfinity index [] = -1
+        ifNotInfinity index (x:xs)
+            | null x = index
+            | otherwise = ifNotInfinity (index + 1) xs
+
+
+

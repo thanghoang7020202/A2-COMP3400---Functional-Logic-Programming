@@ -37,4 +37,24 @@ fmap'' f Nothing = Nothing
 --instance Functor []  where
 --    fmap f [] = []:[1]
 --    fmap f (x:xs) = f x : [1] : fmap f xs
+-- k = 3 -> 2^3 * 2^3 = 64 - 1 = 63/ 3 = 21 -1 = 20 /4 = 5 -1 = 1 
+tile :: Int -> [[Int]]
+tile 0 = [[0]]
+tile k
+        | k < 0 = []
+        | otherwise = tile' k [1 .. ((negate 1 + (2^k * 2^k)) `div` 3)]
 
+tile' ::Int -> [Int] -> [[Int]]
+tile' 1 [x] = [[0,x],[x,x]]
+tile' k xs = zipWith (++)  (tile' (k-1) (qua1 k xs xs)) (zeroupdater xs (reverse $ tile' (k-1) (qua2 k xs)) ) 
+        ++
+        zipWith (++) (zeroupdater xs (map reverse $ tile' (k-1) (qua3 k xs))) (zeroupdater xs (tile' (k-1) (qua4 k xs)))
+qua1 k xs= take (quarter k xs)
+qua2 k xs = take (quarter k xs) (drop (quarter k xs) xs)
+qua3 k xs = take (quarter k xs) (drop (2*quarter k xs) xs)
+qua4 k xs = take (quarter k xs) (drop (3*quarter k xs) xs)
+
+quarter k xs = length xs `div` 4
+
+zeroupdater :: (Eq b, Num b) => [b] -> [[b]] -> [[b]]
+zeroupdater xs = map (map (\i -> if i == 0 then last xs else i))
