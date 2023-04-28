@@ -1,5 +1,4 @@
 module Shortest (shortest) where
-import Language.Haskell.TH.Syntax (counter)
 
 -- Do not modify anything above this line.
 --
@@ -34,7 +33,7 @@ shortest (x:xs)
     where
         cutter:: Int -> [[a]] -> [[a]] -> Maybe [a]
         cutter k originalList [] = Nothing
-        cutter k originalList (x:xs) = shortest' k originalList [drop k y | y <- originalList ] 
+        cutter k originalList (x:xs) = shortest' k originalList [drop k y | y <- originalList] 
         shortest':: Int -> [[a]] -> [[a]] -> Maybe [a]
         shortest' k originalList [] = Nothing
         shortest' k originalList (x:xs) 
